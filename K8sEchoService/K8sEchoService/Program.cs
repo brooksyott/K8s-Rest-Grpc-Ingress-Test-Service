@@ -13,6 +13,8 @@ public class Program
         // Add services to the container.
 
         builder.Services.AddGrpc();
+        builder.Services.AddGrpcReflection();
+
         builder.Services.AddControllers();
         var configuration = new ConfigurationBuilder()
             .SetBasePath(Directory.GetCurrentDirectory())
@@ -40,12 +42,16 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        app.MapGrpcReflectionService();
         // app.UseHttpsRedirection();
+        // app.UseMiddleware<GrpcPathMiddleware>();
 
         app.UseAuthorization();
 
 
+
         app.MapGrpcService<GreeterService>();
+
         app.MapControllers();
 
         app.Run();
