@@ -2,6 +2,9 @@
 namespace K8sEchoService;
 using Serilog;
 using K8sEchoService.Echo;
+using Microsoft.Extensions.Logging;
+using Serilog.Core;
+
 // using K8sEchoService.Greeter;
 
 public class Program
@@ -16,11 +19,14 @@ public class Program
         builder.Services.AddGrpcReflection();
 
         builder.Services.AddControllers();
+
+        builder.Logging.ClearProviders();
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
-            .Build();
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+                    .Build();
+
 
         builder.Host.UseSerilog((hostContext, services, configuration) =>
         {
@@ -47,8 +53,6 @@ public class Program
         // app.UseMiddleware<GrpcPathMiddleware>();
 
         app.UseAuthorization();
-
-
 
         app.MapGrpcService<GreeterService>();
 
