@@ -1,10 +1,10 @@
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 5000
-EXPOSE 5001
+EXPOSE 8000
+EXPOSE 50051
 
-
-ENV ASPNETCORE_URLS=http://+:5000
+# ENV ASPNETCORE_URLS=https://+:50051
+ENV ASPNETCORE_URLS=http://+:50051
 
 USER app
 FROM --platform=$BUILDPLATFORM mcr.microsoft.com/dotnet/sdk:8.0 AS build
@@ -21,6 +21,9 @@ ARG configuration=Release
 RUN dotnet publish "K8sEchoService.csproj" -c $configuration -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+USER root
+RUN apt-get update && apt-get install -y curl iputils-ping
+USER app
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "K8sEchoService.dll"]

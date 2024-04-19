@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace K8sEchoService.Echo;
 
 [ApiController]
-[Route("/")]
+[Route("/echo")]
 public class EchoController : ControllerBase
 {
     private readonly ILogger<EchoController> _logger;

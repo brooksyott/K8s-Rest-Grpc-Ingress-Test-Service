@@ -1,12 +1,12 @@
 # This workflow will build a .NET project
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
 
-name: k8s-rest-grpc-echoserver-v1.0
+name: .NET
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: k8s-rest-grpc-echoserver
-  RELEASE: v1.0.0
+  RELEASE: latest
   
 on:
   push:
@@ -43,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: ./K8sEchoService/K8sEchoService/Dockerfile
+          file: ./K8sEchoService/Dockerfile
           push: true
           tags: ${{ env.REGISTRY }}/${{ github.actor }}/${{ env.IMAGE_NAME }}:${{ env.RELEASE }}
       

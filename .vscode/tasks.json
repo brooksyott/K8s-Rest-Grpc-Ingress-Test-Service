@@ -44,7 +44,7 @@
                 "build"
             ],
             "dockerBuild": {
-                "tag": "k8sechoservice:dev",
+                "tag": "k8srestgrpcingresstestservice:dev",
                 "target": "base",
                 "dockerfile": "${workspaceFolder}/K8sEchoService/Dockerfile",
                 "context": "${workspaceFolder}",
@@ -61,7 +61,7 @@
                 "build"
             ],
             "dockerBuild": {
-                "tag": "k8sechoservice:latest",
+                "tag": "k8srestgrpcingresstestservice:latest",
                 "dockerfile": "${workspaceFolder}/K8sEchoService/Dockerfile",
                 "context": "${workspaceFolder}",
                 "platform": {

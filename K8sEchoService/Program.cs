@@ -2,6 +2,10 @@
 namespace K8sEchoService;
 using Serilog;
 using K8sEchoService.Echo;
+using Microsoft.Extensions.Logging;
+using Serilog.Core;
+using Microsoft.AspNetCore.Rewrite;
+
 // using K8sEchoService.Greeter;
 
 public class Program
@@ -16,11 +20,14 @@ public class Program
         builder.Services.AddGrpcReflection();
 
         builder.Services.AddControllers();
+
+        builder.Logging.ClearProviders();
         var configuration = new ConfigurationBuilder()
-            .SetBasePath(Directory.GetCurrentDirectory())
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
-            .Build();
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.json")
+                    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+                    .Build();
+
 
         builder.Host.UseSerilog((hostContext, services, configuration) =>
         {
@@ -42,13 +49,20 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        // ==================================================================================
+        // The below code is added to handle the gRPC with a path, ie: localhost:50051/grpc
+        // Remove it for normal grpc services to be at the root "/", localhost:50051
+        app.UseRouting();
+        var rewriteOptions = new RewriteOptions()
+           .AddRewrite("grpc/(.*)", "$1", skipRemainingRules: false);
+        app.UseRewriter(rewriteOptions);
+        // ==================================================================================
+
         app.MapGrpcReflectionService();
         // app.UseHttpsRedirection();
         // app.UseMiddleware<GrpcPathMiddleware>();
 
         app.UseAuthorization();
-
-
 
         app.MapGrpcService<GreeterService>();
 
