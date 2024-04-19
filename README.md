@@ -57,12 +57,28 @@ kubectl create secret tls grpc-tls-secret --key certs/localhost.key --cert certs
 ```
 Once completed the Ingress can use the certs. Clients need to ignore certificate errors.
 
-### Deploy the Echo Service
+### Deploy the Echo Service via Helm
 
-#### Create the echo-demo namespace
+#### Add the helm repository
+
 ```
-kubectl apply -f namespace.yaml
+helm repo add brooksyott https://raw.githubusercontent.com/brooksyott/brooksyott.github.io/main/charts
+helm repo update
 ```
+
+#### Deploy the NGINX Ingress
+
+```
+helm install ingress-nginx brooksyott/nginx --namespace ingress-nginx --create-namespace
+```
+
+#### Deploy the Echo Service
+
+```
+helm install echo-demo brooksyott/k8s-grpc-rest-echo --namesapce echo-demo
+```
+
+### Deploy the Echo Service via Kubernetes Files
 
 #### Create an Ingress
 
