@@ -45,6 +45,13 @@ openssl x509 -req -sha256 -days 1024 -in localhost.csr -CA RootCA.pem -CAkey Roo
 Secret Name: grpc-tls-secret   
 Name Space: echo-demo
 
+#### Create the echo-demo namespace
+```
+kubectl apply -f namespace.yaml
+```
+
+#### Put the certs into the secret
+
 ```
 kubectl create secret tls grpc-tls-secret --key certs/localhost.key --cert certs/localhost.crt --namespace echo-demo
 ```
@@ -52,16 +59,16 @@ Once completed the Ingress can use the certs. Clients need to ignore certificate
 
 ### Deploy the Echo Service
 
+#### Create the echo-demo namespace
+```
+kubectl apply -f namespace.yaml
+```
+
 #### Create an Ingress
 
 If an Ingress isn't defined, to deploy NGINX run
 ```
 kubectl apply -f ingress-deploy.yaml
-```
-
-#### Create the echo-demo namespace
-```
-kubectl apply -f namespace.yaml
 ```
 
 #### Deploy a REST echo service

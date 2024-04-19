@@ -50,9 +50,9 @@ spec:
           httpGet:
             path: /health/live
             port: 8000
-          initialDelaySeconds: 15
+          initialDelaySeconds: 30
           periodSeconds: 10
-          failureThreshold: 6 # Number of times to retry the probe before giving up
+          failureThreshold: 3 # Number of times to retry the probe before giving up
         readinessProbe:
           httpGet:
             path: /health/ready
@@ -93,7 +93,7 @@ spec:
   rules:
   - http:
       paths:
-      - path: /grpc(/|$)(.*)   # The grpc path is remapped in the c# app to /, but we need to capture the path after grpc
+      - path: /grpc(/|$)(.*) # The grpc path is remapped in the c# app to /, but we need to capture the path after grpc
         pathType: Prefix
         backend:
           service:
