@@ -4,6 +4,7 @@ using Serilog;
 using K8sEchoService.Echo;
 using Microsoft.Extensions.Logging;
 using Serilog.Core;
+using Microsoft.AspNetCore.Rewrite;
 
 // using K8sEchoService.Greeter;
 
@@ -47,6 +48,15 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        // ==================================================================================
+        // The below code is added to handle the gRPC with a path, ie: localhost:50051/grpc
+        // Remove it for normal grpc services to be at the root "/", localhost:50051
+        app.UseRouting();
+        var rewriteOptions = new RewriteOptions()
+           .AddRewrite("grpc/(.*)", "$1", skipRemainingRules: false);
+        app.UseRewriter(rewriteOptions);
+        // ==================================================================================
 
         app.MapGrpcReflectionService();
         // app.UseHttpsRedirection();
