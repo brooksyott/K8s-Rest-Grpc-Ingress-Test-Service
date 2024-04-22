@@ -16,7 +16,7 @@ public class GreeterService : Greeter.GreeterBase
         _logger.LogInformation("********  Saying hello to {Name}  ********", request.Name);
         return Task.FromResult(new HelloReply
         {
-            Message = "Hello " + request.Name
+            Message = "2: Hello " + request.Name
         });
  
     }

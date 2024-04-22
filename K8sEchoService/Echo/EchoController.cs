@@ -30,4 +30,11 @@ public class EchoController : ControllerBase
         EchoResponse echoRc = await _echoService.Get(Request, HttpContext, bodyAsString);
         return Ok(echoRc);
     }
+
+    // private bool IsGrpcRequest(HttpContext context)
+    // {
+    //     // Check if the Content-Type is for gRPC and protocol is HTTP/2
+    //     return context.Request.ContentType?.StartsWith("application/grpc") == true &&
+    //            context.Request.Protocol == "HTTP/2";
+    // }
 }
