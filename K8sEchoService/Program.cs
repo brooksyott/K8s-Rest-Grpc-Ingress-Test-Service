@@ -65,6 +65,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapGrpcService<GreeterService>();
+        app.MapGrpcService<EchoGrpcService>();
 
         app.MapControllers();
 
