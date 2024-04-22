@@ -1,0 +1,27 @@
+echoService:
+  echoService:
+    image:
+      repository: ghcr.io/brooksyott/k8s-rest-grpc-echoserver
+      tag: latest
+    imagePullPolicy: IfNotPresent
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+  replicas: 1
+kubernetesClusterDomain: cluster.local
+restEchoService:
+  ports:
+  - name: http
+    port: 443
+    protocol: TCP
+    targetPort: 8000
+  type: ClusterIP
+grpcEchoService:
+  ports:
+  - name: grpc
+    port: 443
+    protocol: TCP
+    targetPort: 50051
+  type: ClusterIP
+

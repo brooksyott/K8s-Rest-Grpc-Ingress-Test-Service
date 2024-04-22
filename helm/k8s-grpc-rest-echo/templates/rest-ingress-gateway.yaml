@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "k8s-grpc-rest-echo.fullname" . }}-rest-ingress-gateway
+  labels:
+  {{- include "k8s-grpc-rest-echo.labels" . | nindent 4 }}
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - localhost.local
+  rules:
+  - http:
+      paths:
+      - path: /rest(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: '{{ include "k8s-grpc-rest-echo.fullname" . }}-rest-echo-service'
+            port:
+              number: 8000
+
