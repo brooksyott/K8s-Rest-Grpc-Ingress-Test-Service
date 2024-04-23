@@ -75,7 +75,7 @@ helm install ingress-nginx brooksyott/nginx --namespace ingress-nginx --create-n
 #### Deploy the Echo Service
 
 ```
-helm install echo-demo brooksyott/k8s-grpc-rest-echo --namesapce echo-demo
+helm install echo-demo brooksyott/k8s-grpc-rest-echo --namespace echo-demo
 ```
 
 ### Deploy the Echo Service via Kubernetes Files

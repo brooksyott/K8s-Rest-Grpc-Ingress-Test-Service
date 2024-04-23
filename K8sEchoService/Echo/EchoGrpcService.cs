@@ -20,25 +20,24 @@ public class EchoGrpcService : EchoGrpc.EchoGrpcBase
 
         // EchoRequestBody echoRequestBody = new EchoRequestBody();
         // echoRequestBody.Body = requestBody;
- 
+
 
         var responseDetails = new EchoGrpcResponse();
 
-        responseDetails.Query = request.Name;
         responseDetails.RemoteIpAddress = context.Peer;
 
         responseDetails.PodInformation = new K8sPodInformation
-            {
-                NodeName = GetEnvironmentVariable(KubernetesConstants.NodeNameEnvVarName),
-                PodName = GetEnvironmentVariable(KubernetesConstants.PodNameEnvVarName),
-                PodNamespace = GetEnvironmentVariable(KubernetesConstants.PodNamespaceEnvVarName),
-                PodIp = GetEnvironmentVariable(KubernetesConstants.PodIpEnvVarName)
-            };
+        {
+            NodeName = GetEnvironmentVariable(KubernetesConstants.NodeNameEnvVarName),
+            PodName = GetEnvironmentVariable(KubernetesConstants.PodNameEnvVarName),
+            PodNamespace = GetEnvironmentVariable(KubernetesConstants.PodNamespaceEnvVarName),
+            PodIp = GetEnvironmentVariable(KubernetesConstants.PodIpEnvVarName)
+        };
 
-        responseDetails.RequestBody = new RequestBody
-            {
-                Body = request.Name
-            };
+        responseDetails.RequestBody = new EchoGrpcRequest
+        {
+            EnvironmentVariables = request.EnvironmentVariables
+        };
 
         responseDetails.HostName = Environment.MachineName;
         responseDetails.Method = context.Method.ToUpper();
@@ -53,12 +52,16 @@ public class EchoGrpcService : EchoGrpc.EchoGrpcBase
         }
 
 
-        var envVariables = Environment.GetEnvironmentVariables()
-                                    .Cast<DictionaryEntry>()
-                                    .ToDictionary(e => e.Key.ToString(), e => e.Value.ToString());
+        if (request.EnvironmentVariables == true)
+        {
+            var envVariables = Environment.GetEnvironmentVariables()
+                                        .Cast<DictionaryEntry>()
+                                        .ToDictionary(e => e.Key.ToString(), e => e.Value.ToString());
 
-        foreach (var env in envVariables) {
-            responseDetails.EnvironmentVariables.Add(env.Key, env.Value);
+            foreach (var env in envVariables)
+            {
+                responseDetails.EnvironmentVariables.Add(env.Key, env.Value);
+            }
         }
 
         return Task.FromResult(responseDetails);
