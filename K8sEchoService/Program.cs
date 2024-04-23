@@ -52,10 +52,10 @@ public class Program
         // ==================================================================================
         // The below code is added to handle the gRPC with a path, ie: localhost:50051/grpc
         // Remove it for normal grpc services to be at the root "/", localhost:50051
-        app.UseRouting();
-        var rewriteOptions = new RewriteOptions()
-           .AddRewrite("grpc/(.*)", "$1", skipRemainingRules: false);
-        app.UseRewriter(rewriteOptions);
+        // app.UseRouting();
+        // var rewriteOptions = new RewriteOptions()
+        //    .AddRewrite("grpc/(.*)", "$1", skipRemainingRules: false);
+        // app.UseRewriter(rewriteOptions);
         // ==================================================================================
 
         app.MapGrpcReflectionService();

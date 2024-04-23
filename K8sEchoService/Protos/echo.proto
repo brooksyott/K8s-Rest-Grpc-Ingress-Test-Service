@@ -12,7 +12,7 @@ service EchoGrpc {
 
 // The request message containing the user's name.
 message EchoGrpcRequest {
-  string name = 1;
+  bool environmentVariables = 1;
 }
 
 message EchoGrpcResponse {
@@ -22,10 +22,9 @@ message EchoGrpcResponse {
     string method = 4;
     string path = 5;
     string host = 6;
-    string query = 7;
-    RequestBody requestBody = 8;
-    map<string, string> allHeaders = 9;
-    map<string, string> environmentVariables = 10;
+    EchoGrpcRequest requestBody = 7;
+    map<string, string> allHeaders = 8;
+    map<string, string> environmentVariables = 9;
 }
 
     message K8sPodInformation {
