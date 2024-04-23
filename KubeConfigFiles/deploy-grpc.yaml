@@ -83,7 +83,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
     nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
-    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    # nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   ingressClassName: nginx
   tls:
@@ -93,7 +93,8 @@ spec:
   rules:
   - http:
       paths:
-      - path: /grpc(/|$)(.*) # The grpc path is remapped in the c# app to /, but we need to capture the path after grpc
+      # - path: /grpc(/|$)(.*) # The grpc path is remapped in the c# app to /, but we need to capture the path after grpc
+      - path: / # The grpc path is remapped in the c# app to /, but we need to capture the path after grpc
         pathType: Prefix
         backend:
           service:
