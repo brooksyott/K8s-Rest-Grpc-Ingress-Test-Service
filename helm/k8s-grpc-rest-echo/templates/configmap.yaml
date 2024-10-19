@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: echo-configmap
+data:
+  generalConfig.yaml: |
+    settings:
+      key1: value1
+      key2: value2
+      items:
+        - item1
+        - item2
+        - item3

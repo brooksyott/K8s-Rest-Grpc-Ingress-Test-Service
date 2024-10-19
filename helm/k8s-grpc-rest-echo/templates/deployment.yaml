@@ -17,7 +17,7 @@ spec:
       {{- include "k8s-grpc-rest-echo.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
-        - name: echo-onfig-volume
+        - name: echo-config-volume
           configMap:
             name: echo-configmap
       containers:
