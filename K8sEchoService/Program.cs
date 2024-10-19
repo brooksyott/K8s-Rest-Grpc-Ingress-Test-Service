@@ -57,6 +57,7 @@ public class Program
         //    .AddRewrite("grpc/(.*)", "$1", skipRemainingRules: false);
         // app.UseRewriter(rewriteOptions);
         // ==================================================================================
+        app.UseMiddleware<ConfigWatcherMiddleware>();
 
         app.MapGrpcReflectionService();
         // app.UseHttpsRedirection();

@@ -1,6 +1,7 @@
 namespace K8sEchoService.Echo;
 
 using System.Collections;
+using K8sEchoService.Configuration;
 using K8sEchoService.Kubernetes;
 
 public class EchoService : IEchoService
@@ -34,6 +35,7 @@ public class EchoService : IEchoService
             },
             Headers = request.Headers.ToDictionary(h => h.Key, h => h.Value.ToString()),
             RequestBody = echoRequestBody,
+            GeneralConfig = GlobalConfig.GetConfig(),
             EnvironmentVariables = Environment.GetEnvironmentVariables()
                                     .Cast<DictionaryEntry>()
                                     .ToDictionary(e => e.Key.ToString(), e => e.Value.ToString())

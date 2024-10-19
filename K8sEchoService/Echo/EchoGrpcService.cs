@@ -4,6 +4,7 @@ namespace K8sEchoService;
 
 using System.Collections;
 using K8sEchoService;
+using K8sEchoService.Configuration;
 using K8sEchoService.Kubernetes;
 
 public class EchoGrpcService : EchoGrpc.EchoGrpcBase
@@ -43,8 +44,13 @@ public class EchoGrpcService : EchoGrpc.EchoGrpcBase
         responseDetails.Method = context.Method.ToUpper();
         responseDetails.Path = "n/a";
         responseDetails.Host = context.Host.ToString();
-
-
+        GeneralConfig generalConfig = GlobalConfig.GetConfig();
+        responseDetails.GeneralConfig = new GeneralConfigProto();
+        responseDetails.GeneralConfig.Settings = new SettingsProto();
+        responseDetails.GeneralConfig.Settings.Key1 = generalConfig.Settings.Key1;
+        responseDetails.GeneralConfig.Settings.Key2 = generalConfig.Settings.Key2;
+        responseDetails.GeneralConfig.Settings.Items.AddRange(generalConfig.Settings.Items);
+        
         var headers = context.RequestHeaders.ToDictionary(h => h.Key, h => h.Value.ToString());
         foreach (var header in headers)
         {
