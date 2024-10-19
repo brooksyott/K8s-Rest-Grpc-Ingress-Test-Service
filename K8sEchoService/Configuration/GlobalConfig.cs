@@ -20,7 +20,8 @@ public static class GlobalConfig
     const string InContainerEnvVar = "DOTNET_RUNNING_IN_CONTAINER";
     public static string ConfigFileName { get; set; } = "generalConfig.yaml";
     public static string ConfigDirectoryNoContainer { get; set; } = Environment.CurrentDirectory;
-    public static string ConfigDirectoryInContainer { get; set; } = "/app/config/..data"; // the ..data seems to be added by the container
+    // public static string ConfigDirectoryInContainer { get; set; } = "/app/config/..data"; // the ..data seems to be added by the container
+    public static string ConfigDirectoryInContainer { get; set; } = "/app/config"; // the ..data seems to be added by the container
 
     static GeneralConfig _generalConfig = null;
 

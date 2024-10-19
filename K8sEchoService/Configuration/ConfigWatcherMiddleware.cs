@@ -23,13 +23,14 @@ public class ConfigWatcherMiddleware
         // Set up FileSystemWatcher to monitor the file
         _fileWatcher = new FileSystemWatcher(directory, fileName)
         {
-            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName
+            NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName | NotifyFilters.CreationTime | NotifyFilters.Size
         };
 
         // Subscribe to file change events
         _fileWatcher.Changed += OnFileChanged;
         _fileWatcher.Created += OnFileChanged;
         _fileWatcher.Deleted += OnFileChanged;
+        _fileWatcher.Renamed += OnFileChanged;
 
         // Start monitoring
         _fileWatcher.EnableRaisingEvents = true;
@@ -48,6 +49,7 @@ public class ConfigWatcherMiddleware
 
         bool loadConfigSuccess = GlobalConfig.LoadConfig();
         _logger.LogInformation($"Config loaded: {loadConfigSuccess}");
+
 
     }
 
