@@ -2,7 +2,7 @@ echoService:
   echoService:
     image:
       repository: ghcr.io/brooksyott/k8s-rest-grpc-echoserver
-      tag: latest
+      tag: v1.1.0
     imagePullPolicy: IfNotPresent
     resources:
       limits:
