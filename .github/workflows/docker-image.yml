@@ -6,13 +6,13 @@ name: .NET
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: k8s-rest-grpc-echoserver
-  RELEASE: v1.3.0
+  RELEASE: v1.4.0
   
 on:
   push:
-    branches: [ "v1.3.0" ]
+    branches: [ "v1.4.0" ]
   pull_request:
-    branches: [ "v1.3.0" ]
+    branches: [ "v1.4.0" ]
 
 jobs:
 

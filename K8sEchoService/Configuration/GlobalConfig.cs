@@ -1,4 +1,6 @@
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
@@ -19,6 +21,9 @@ public static class GlobalConfig
 {
     const string InContainerEnvVar = "DOTNET_RUNNING_IN_CONTAINER";
     public static string ConfigFileName { get; set; } = "generalConfig.yaml";
+
+    private static string _currentHash = string.Empty;
+
     public static string ConfigDirectoryNoContainer { get; set; } = Environment.CurrentDirectory;
     // public static string ConfigDirectoryInContainer { get; set; } = "/app/config/..data"; // the ..data seems to be added by the container
     public static string ConfigDirectoryInContainer { get; set; } = "/app/config"; // the ..data seems to be added by the container
@@ -44,6 +49,22 @@ public static class GlobalConfig
     public static GeneralConfig GetConfig()
     {
         return _generalConfig;
+    }
+
+    public static bool HasChanged()
+    {
+        var configFile = GetConfigFile();
+        string content = File.ReadAllText(configFile);
+        using var md5 = MD5.Create();
+
+        var hash = BitConverter.ToString(md5.ComputeHash(Encoding.UTF8.GetBytes(content)));
+        if (hash != _currentHash)
+        {
+            _currentHash = hash;
+            return true;
+        }
+
+        return false;
     }
 
     public static Boolean LoadConfig()

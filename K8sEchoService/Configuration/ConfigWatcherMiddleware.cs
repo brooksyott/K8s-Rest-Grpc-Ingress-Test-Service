@@ -36,19 +36,19 @@ public class ConfigWatcherMiddleware
         _fileWatcher.EnableRaisingEvents = true;
 
         bool loadConfigSuccess = GlobalConfig.LoadConfig();
-        _logger.LogInformation($"Config loaded: {loadConfigSuccess}");
+        _logger.LogInformation($"GlobalConfig loaded: {loadConfigSuccess}");
 
-        _logger.LogInformation($"Started monitoring file: {filePath}");
+        _logger.LogInformation($"GlobalConfig: Started monitoring file: {filePath}");
     }
 
     // This method is invoked when the file is changed
     private void OnFileChanged(object sender, FileSystemEventArgs e)
     {
         // Log when the file has been modified, created, or deleted
-        _logger.LogInformation($"File '{e.FullPath}' has been {e.ChangeType}");
+        _logger.LogInformation($"GlobalConfig: File '{e.FullPath}' has been {e.ChangeType}");
 
         bool loadConfigSuccess = GlobalConfig.LoadConfig();
-        _logger.LogInformation($"Config loaded: {loadConfigSuccess}");
+        _logger.LogInformation($"GlobalConfig: Config loaded: {loadConfigSuccess}");
 
 
     }
