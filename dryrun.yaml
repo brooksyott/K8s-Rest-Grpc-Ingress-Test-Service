@@ -1,0 +1,263 @@
+Release "ingress-echo" has been upgraded. Happy Helming!
+NAME: ingress-echo
+LAST DEPLOYED: Sat Nov 16 11:30:40 2024
+NAMESPACE: ingress-echo
+STATUS: pending-upgrade
+REVISION: 34
+TEST SUITE: None
+USER-SUPPLIED VALUES:
+configMap:
+  data:
+    key1: valueFleet01
+    key2: valueFleet26
+  enabled: true
+echoService:
+  replicas: 3
+image:
+  tag: v1.3.0
+
+COMPUTED VALUES:
+configMap:
+  data:
+    key1: valueFleet01
+    key2: valueFleet26
+  enabled: true
+echoService:
+  echoService:
+    image:
+      imagePullPolicy: IfNotPresent
+      repository: ghcr.io/brooksyott/k8s-rest-grpc-echoserver
+      tag: v1.4.0
+    resources:
+      limits:
+        cpu: 500m
+        memory: 128Mi
+  replicas: 3
+grpcEchoService:
+  pathPrefix: /grpc/echoService
+  ports:
+  - name: grpc
+    port: 443
+    protocol: TCP
+    targetPort: 50051
+  type: ClusterIP
+image:
+  tag: v1.3.0
+kubernetesClusterDomain: cluster.local
+restEchoService:
+  pathPrefix: /rest/echoService
+  ports:
+  - name: http
+    port: 443
+    protocol: TCP
+    targetPort: 8000
+  type: ClusterIP
+
+HOOKS:
+MANIFEST:
+---
+# Source: k8s-grpc-rest-echo/templates/configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: echo-configmap
+data:
+  generalConfig.yaml: |
+    settings:
+      key1: valueFleet01
+      key2: valueFleet26
+      items:
+        - item1
+        - item2
+        - item3
+---
+# Source: k8s-grpc-rest-echo/templates/grpc-echo-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-echo-k8s-grpc-rest-echo-grpc-echo-service
+  labels:
+    helm.sh/chart: k8s-grpc-rest-echo-0.6.0
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    app: echo-service-app
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+  ports:
+  - name: grpc
+    port: 443
+    protocol: TCP
+    targetPort: 50051
+---
+# Source: k8s-grpc-rest-echo/templates/rest-echo-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: ingress-echo-k8s-grpc-rest-echo-rest-echo-service
+  labels:
+    helm.sh/chart: k8s-grpc-rest-echo-0.6.0
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  selector:
+    app: echo-service-app
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+  ports:
+  - name: http
+    port: 443
+    protocol: TCP
+    targetPort: 8000
+---
+# Source: k8s-grpc-rest-echo/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ingress-echo-k8s-grpc-rest-echo-echo-service
+  labels:
+    helm.sh/chart: k8s-grpc-rest-echo-0.6.0
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: echo-service-app
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      app.kubernetes.io/instance: ingress-echo
+  template:
+    metadata:
+      labels:
+        app: echo-service-app
+        app.kubernetes.io/name: k8s-grpc-rest-echo
+        app.kubernetes.io/instance: ingress-echo
+    spec:
+      volumes:
+        - name: echo-config-volume
+          configMap:
+            name: echo-configmap
+      containers:
+      - env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+        - name: NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: "cluster.local"
+        image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: echo-config-volume
+          mountPath: /app/config
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health/live
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        name: echo-service
+        ports:
+        - containerPort: 8000
+          name: http
+        - containerPort: 50051
+          name: grpc
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health/ready
+            port: 8000
+          initialDelaySeconds: 15
+          periodSeconds: 5
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+---
+# Source: k8s-grpc-rest-echo/templates/grpc-ingress-gateway.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-echo-k8s-grpc-rest-echo-grpc-ingress-gateway
+  labels:
+    helm.sh/chart: k8s-grpc-rest-echo-0.6.0
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - localhost.local
+    secretName: grpc-tls-secret
+  rules:
+  - http:
+      paths:
+      # - path: /grpc(/|$)(.*)
+      - path: /grpc/echoService(/|$)(.*)
+        # pathType: Prefix
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: 'ingress-echo-k8s-grpc-rest-echo-grpc-echo-service'
+            port:
+              number: 50051
+---
+# Source: k8s-grpc-rest-echo/templates/rest-ingress-gateway.yaml
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-echo-k8s-grpc-rest-echo-rest-ingress-gateway
+  labels:
+    helm.sh/chart: k8s-grpc-rest-echo-0.6.0
+    app.kubernetes.io/name: k8s-grpc-rest-echo
+    app.kubernetes.io/instance: ingress-echo
+    app.kubernetes.io/version: "0.4.0"
+    app.kubernetes.io/managed-by: Helm
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+    - localhost.local
+  rules:
+  - http:
+      paths:
+      - path: /rest/echoService(/|$)(.*)
+        # pathType: Prefix
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: 'ingress-echo-k8s-grpc-rest-echo-rest-echo-service'
+            port:
+              number: 8000
+

@@ -41,7 +41,7 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.echoService.echoService.image.repository }}:{{ .Values.echoService.echoService.image.tag | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.echoService.echoService.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.echoService.echoService.image.imagePullPolicy }}
         volumeMounts:
         - name: echo-config-volume
           mountPath: /app/config
