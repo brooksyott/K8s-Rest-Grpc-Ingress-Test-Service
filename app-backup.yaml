@@ -1,0 +1,893 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      cni.projectcalico.org/containerID: 672230a9d3c06b482896300d361093b9585c91071249ad55bffbafeeeac0c436
+      cni.projectcalico.org/podIP: 10.42.3.107/32
+      cni.projectcalico.org/podIPs: 10.42.3.107/32
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    generateName: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6-
+    labels:
+      app: echo-service-app
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      pod-template-hash: 6d9f7d6bb6
+    name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6-jkg5v
+    namespace: ingress-echo
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6
+      uid: f16a8256-0c4b-4f31-8449-dcc1aafc9fec
+    resourceVersion: "18388561"
+    uid: 881329f7-8f6e-423b-b485-09d3f811d23e
+  spec:
+    containers:
+    - env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: spec.nodeName
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: status.podIP
+      - name: KUBERNETES_CLUSTER_DOMAIN
+        value: cluster.local
+      image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/live
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: echo-service
+      ports:
+      - containerPort: 8000
+        name: http
+        protocol: TCP
+      - containerPort: 50051
+        name: grpc
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/ready
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 15
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 128Mi
+        requests:
+          cpu: 500m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /app/config
+        name: echo-config-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-zcfkm
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: c2-tc-worker03
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: echo-configmap
+      name: echo-config-volume
+    - name: kube-api-access-zcfkm
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:05Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:04Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:20Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:20Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:04Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://124311a58b43dc6e846cbdc14d29493ecd16fb41329778a8fb1628947d31971b
+      image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+      imageID: ghcr.io/brooksyott/k8s-rest-grpc-echoserver@sha256:4e64280401868cd729d904dfb1c9c0b834ba92fff00460cc131600f3ac35bcf6
+      lastState: {}
+      name: echo-service
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2024-11-16T14:42:05Z"
+    hostIP: 10.0.0.132
+    hostIPs:
+    - ip: 10.0.0.132
+    - ip: 2607:fea8:e11d:41c0::2cfd
+    phase: Running
+    podIP: 10.42.3.107
+    podIPs:
+    - ip: 10.42.3.107
+    qosClass: Guaranteed
+    startTime: "2024-11-16T14:42:04Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      cni.projectcalico.org/containerID: b469e2b872cc5dd8873d3ed4317d61952e9fd40d43a70c351d494f4c3c5c4da6
+      cni.projectcalico.org/podIP: 10.42.4.71/32
+      cni.projectcalico.org/podIPs: 10.42.4.71/32
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    generateName: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6-
+    labels:
+      app: echo-service-app
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      pod-template-hash: 6d9f7d6bb6
+    name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6-jppvd
+    namespace: ingress-echo
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6
+      uid: f16a8256-0c4b-4f31-8449-dcc1aafc9fec
+    resourceVersion: "18388568"
+    uid: ef593d52-99b6-4548-bfc8-804b345411cd
+  spec:
+    containers:
+    - env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: spec.nodeName
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: status.podIP
+      - name: KUBERNETES_CLUSTER_DOMAIN
+        value: cluster.local
+      image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/live
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: echo-service
+      ports:
+      - containerPort: 8000
+        name: http
+        protocol: TCP
+      - containerPort: 50051
+        name: grpc
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/ready
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 15
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 128Mi
+        requests:
+          cpu: 500m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /app/config
+        name: echo-config-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-7qcv4
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: c2-tc-worker02
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: echo-configmap
+      name: echo-config-volume
+    - name: kube-api-access-7qcv4
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:06Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:04Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:20Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:20Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:04Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://42bdc287535f0ce213505e709c8e580830e86e24269009d4994db94b34ec92d2
+      image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+      imageID: ghcr.io/brooksyott/k8s-rest-grpc-echoserver@sha256:4e64280401868cd729d904dfb1c9c0b834ba92fff00460cc131600f3ac35bcf6
+      lastState: {}
+      name: echo-service
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2024-11-16T14:42:05Z"
+    hostIP: 10.0.0.17
+    hostIPs:
+    - ip: 10.0.0.17
+    - ip: 2607:fea8:e11d:41c0::9a56
+    phase: Running
+    podIP: 10.42.4.71
+    podIPs:
+    - ip: 10.42.4.71
+    qosClass: Guaranteed
+    startTime: "2024-11-16T14:42:04Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      cni.projectcalico.org/containerID: a654beb81a11a0e9eb30d011f1426989d8477c0c86003ef0f63bb1fdb4ff695f
+      cni.projectcalico.org/podIP: 10.42.6.146/32
+      cni.projectcalico.org/podIPs: 10.42.6.146/32
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    generateName: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6-
+    labels:
+      app: echo-service-app
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      pod-template-hash: 6d9f7d6bb6
+    name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6-p5z9v
+    namespace: ingress-echo
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6
+      uid: f16a8256-0c4b-4f31-8449-dcc1aafc9fec
+    resourceVersion: "18388621"
+    uid: 862ee91b-8d06-4c87-b877-9581546e8fd2
+  spec:
+    containers:
+    - env:
+      - name: POD_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+      - name: POD_NAMESPACE
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.namespace
+      - name: NODE_NAME
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: spec.nodeName
+      - name: POD_IP
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: status.podIP
+      - name: KUBERNETES_CLUSTER_DOMAIN
+        value: cluster.local
+      image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/live
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: echo-service
+      ports:
+      - containerPort: 8000
+        name: http
+        protocol: TCP
+      - containerPort: 50051
+        name: grpc
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/ready
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 15
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 128Mi
+        requests:
+          cpu: 500m
+          memory: 128Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /app/config
+        name: echo-config-volume
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-pqf8w
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: c2-gpu-worker02
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: echo-configmap
+      name: echo-config-volume
+    - name: kube-api-access-pqf8w
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:05Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:04Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:25Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:25Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2024-11-16T14:42:04Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://e731c8a103760cdca7df38a26052906b7aa00133eb7406fcd0a47a5fbeef2ed9
+      image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+      imageID: ghcr.io/brooksyott/k8s-rest-grpc-echoserver@sha256:37a5e014293f6151636f4de69d987a433a78a53d42a35b44ded036bd8835391a
+      lastState: {}
+      name: echo-service
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2024-11-16T14:42:05Z"
+    hostIP: 10.0.0.179
+    hostIPs:
+    - ip: 10.0.0.179
+    - ip: 2607:fea8:e11d:41c0::c23f
+    phase: Running
+    podIP: 10.42.6.146
+    podIPs:
+    - ip: 10.42.6.146
+    qosClass: Guaranteed
+    startTime: "2024-11-16T14:42:04Z"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: ingress-echo
+      meta.helm.sh/release-namespace: ingress-echo
+      objectset.rio.cattle.io/id: default-fleet-demo-01-echo-cattle-fleet-local-system
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    labels:
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      app.kubernetes.io/version: 0.4.0
+      helm.sh/chart: k8s-grpc-rest-echo-0.4.0
+      objectset.rio.cattle.io/hash: e9c633ce65aee3d9087b67c7ad0a8ad3e8569880
+    name: ingress-echo-k8s-grpc-rest-echo-grpc-echo-service
+    namespace: ingress-echo
+    resourceVersion: "18388333"
+    uid: 480cd2de-b77a-469a-90a4-605b45f484a3
+  spec:
+    clusterIP: 10.43.6.138
+    clusterIPs:
+    - 10.43.6.138
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: grpc
+      port: 443
+      protocol: TCP
+      targetPort: 50051
+    selector:
+      app: echo-service-app
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      meta.helm.sh/release-name: ingress-echo
+      meta.helm.sh/release-namespace: ingress-echo
+      objectset.rio.cattle.io/id: default-fleet-demo-01-echo-cattle-fleet-local-system
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    labels:
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      app.kubernetes.io/version: 0.4.0
+      helm.sh/chart: k8s-grpc-rest-echo-0.4.0
+      objectset.rio.cattle.io/hash: e9c633ce65aee3d9087b67c7ad0a8ad3e8569880
+    name: ingress-echo-k8s-grpc-rest-echo-rest-echo-service
+    namespace: ingress-echo
+    resourceVersion: "18388337"
+    uid: 1d1e51d8-d076-4c87-b106-34c046b28b76
+  spec:
+    clusterIP: 10.43.127.7
+    clusterIPs:
+    - 10.43.127.7
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 443
+      protocol: TCP
+      targetPort: 8000
+    selector:
+      app: echo-service-app
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      field.cattle.io/publicEndpoints: '[{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":80,"protocol":"HTTP","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-ingress-gateway","path":"/","allNodes":false},{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":443,"protocol":"HTTPS","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-ingress-gateway","path":"/","allNodes":false},{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":80,"protocol":"HTTP","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-ingress-gateway","path":"/rest(/|$)(.*)","allNodes":false},{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":443,"protocol":"HTTPS","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-ingress-gateway","path":"/rest(/|$)(.*)","allNodes":false}]'
+      meta.helm.sh/release-name: ingress-echo
+      meta.helm.sh/release-namespace: ingress-echo
+      objectset.rio.cattle.io/id: default-fleet-demo-01-echo-cattle-fleet-local-system
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    generation: 2
+    labels:
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/managed-by: Helm
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      app.kubernetes.io/version: 0.4.0
+      helm.sh/chart: k8s-grpc-rest-echo-0.4.0
+      objectset.rio.cattle.io/hash: e9c633ce65aee3d9087b67c7ad0a8ad3e8569880
+    name: ingress-echo-k8s-grpc-rest-echo-echo-service
+    namespace: ingress-echo
+    resourceVersion: "18388872"
+    uid: 69ee0ff7-e8e9-408a-9deb-2b586adb172a
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 3
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: echo-service-app
+        app.kubernetes.io/instance: ingress-echo
+        app.kubernetes.io/name: k8s-grpc-rest-echo
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: echo-service-app
+          app.kubernetes.io/instance: ingress-echo
+          app.kubernetes.io/name: k8s-grpc-rest-echo
+      spec:
+        containers:
+        - env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: KUBERNETES_CLUSTER_DOMAIN
+            value: cluster.local
+          image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/live
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: echo-service
+          ports:
+          - containerPort: 8000
+            name: http
+            protocol: TCP
+          - containerPort: 50051
+            name: grpc
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/ready
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/config
+            name: echo-config-volume
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: echo-configmap
+          name: echo-config-volume
+  status:
+    availableReplicas: 3
+    conditions:
+    - lastTransitionTime: "2024-11-16T14:42:25Z"
+      lastUpdateTime: "2024-11-16T14:42:25Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2024-11-16T14:42:04Z"
+      lastUpdateTime: "2024-11-16T14:42:25Z"
+      message: ReplicaSet "ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6"
+        has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 3
+    replicas: 3
+    updatedReplicas: 3
+- apiVersion: apps/v1
+  kind: ReplicaSet
+  metadata:
+    annotations:
+      deployment.kubernetes.io/desired-replicas: "3"
+      deployment.kubernetes.io/max-replicas: "4"
+      deployment.kubernetes.io/revision: "1"
+      field.cattle.io/publicEndpoints: '[{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":80,"protocol":"HTTP","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-ingress-gateway","path":"/","allNodes":false},{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":443,"protocol":"HTTPS","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-grpc-ingress-gateway","path":"/","allNodes":false},{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":80,"protocol":"HTTP","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-ingress-gateway","path":"/rest(/|$)(.*)","allNodes":false},{"addresses":["10.0.0.132","10.0.0.155","10.0.0.17","10.0.0.179","10.0.0.187","10.0.0.202","10.0.0.56"],"port":443,"protocol":"HTTPS","serviceName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-echo-service","ingressName":"ingress-echo:ingress-echo-k8s-grpc-rest-echo-rest-ingress-gateway","path":"/rest(/|$)(.*)","allNodes":false}]'
+      meta.helm.sh/release-name: ingress-echo
+      meta.helm.sh/release-namespace: ingress-echo
+      objectset.rio.cattle.io/id: default-fleet-demo-01-echo-cattle-fleet-local-system
+    creationTimestamp: "2024-11-16T14:42:04Z"
+    generation: 1
+    labels:
+      app: echo-service-app
+      app.kubernetes.io/instance: ingress-echo
+      app.kubernetes.io/name: k8s-grpc-rest-echo
+      pod-template-hash: 6d9f7d6bb6
+    name: ingress-echo-k8s-grpc-rest-echo-echo-service-6d9f7d6bb6
+    namespace: ingress-echo
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Deployment
+      name: ingress-echo-k8s-grpc-rest-echo-echo-service
+      uid: 69ee0ff7-e8e9-408a-9deb-2b586adb172a
+    resourceVersion: "18388864"
+    uid: f16a8256-0c4b-4f31-8449-dcc1aafc9fec
+  spec:
+    replicas: 3
+    selector:
+      matchLabels:
+        app: echo-service-app
+        app.kubernetes.io/instance: ingress-echo
+        app.kubernetes.io/name: k8s-grpc-rest-echo
+        pod-template-hash: 6d9f7d6bb6
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: echo-service-app
+          app.kubernetes.io/instance: ingress-echo
+          app.kubernetes.io/name: k8s-grpc-rest-echo
+          pod-template-hash: 6d9f7d6bb6
+      spec:
+        containers:
+        - env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          - name: POD_IP
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: status.podIP
+          - name: KUBERNETES_CLUSTER_DOMAIN
+            value: cluster.local
+          image: ghcr.io/brooksyott/k8s-rest-grpc-echoserver:v1.4.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/live
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: echo-service
+          ports:
+          - containerPort: 8000
+            name: http
+            protocol: TCP
+          - containerPort: 50051
+            name: grpc
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/ready
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 128Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /app/config
+            name: echo-config-volume
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: echo-configmap
+          name: echo-config-volume
+  status:
+    availableReplicas: 3
+    fullyLabeledReplicas: 3
+    observedGeneration: 1
+    readyReplicas: 3
+    replicas: 3
+kind: List
+metadata:
+  resourceVersion: ""

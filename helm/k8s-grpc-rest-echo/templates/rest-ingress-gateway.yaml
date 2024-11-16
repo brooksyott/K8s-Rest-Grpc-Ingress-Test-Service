@@ -15,8 +15,9 @@ spec:
   rules:
   - http:
       paths:
-      - path: /rest(/|$)(.*)
-        pathType: Prefix
+      - path: {{.Values.restEchoService.pathPrefix}}(/|$)(.*)
+        # pathType: Prefix
+        pathType: ImplementationSpecific
         backend:
           service:
             name: '{{ include "k8s-grpc-rest-echo.fullname" . }}-rest-echo-service'
