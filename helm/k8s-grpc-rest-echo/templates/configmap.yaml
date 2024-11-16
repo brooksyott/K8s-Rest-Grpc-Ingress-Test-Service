@@ -5,8 +5,8 @@ metadata:
 data:
   generalConfig.yaml: |
     settings:
-      key1: value1
-      key2: value2
+      key1: {{ .Values.configMap.data.key1 | default "value1" }}
+      key2: {{ .Values.configMap.data.key2 | default "value2" }}
       items:
         - item1
         - item2

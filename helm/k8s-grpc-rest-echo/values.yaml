@@ -24,4 +24,8 @@ grpcEchoService:
     protocol: TCP
     targetPort: 50051
   type: ClusterIP
-
+configMap:
+  enabled: true  # Ensure that the ConfigMap is enabled in the chart
+  data:
+    key1: "valuesFile1"  # Override the data in the ConfigMap
+    key2: "valuesFile2"
