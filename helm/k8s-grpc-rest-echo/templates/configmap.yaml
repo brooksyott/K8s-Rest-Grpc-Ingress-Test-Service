@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: echo-configmap
+data:
+  generalConfig.yaml: |
+    settings:
+      key1: {{ .Values.configMap.data.key1 | default "value1" }}
+      key2: {{ .Values.configMap.data.key2 | default "value2" }}
+      items:
+        - item1
+        - item2
+        - item3

@@ -5,6 +5,7 @@ using K8sEchoService.Echo;
 using Microsoft.Extensions.Logging;
 using Serilog.Core;
 using Microsoft.AspNetCore.Rewrite;
+using K8sEchoService.Configuration;
 
 // using K8sEchoService.Greeter;
 
@@ -40,6 +41,12 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        //  Load the GlobalConfig at startup
+        GlobalConfig.LoadConfig();
+
+        // Monitor the file for changes
+        builder.Services.AddHostedService<ConfigChangeService>(); // Register the background service
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -57,7 +64,7 @@ public class Program
         //    .AddRewrite("grpc/(.*)", "$1", skipRemainingRules: false);
         // app.UseRewriter(rewriteOptions);
         // ==================================================================================
-        app.UseMiddleware<ConfigWatcherMiddleware>();
+        // app.UseMiddleware<ConfigWatcherMiddleware>();
 
         app.MapGrpcReflectionService();
         // app.UseHttpsRedirection();

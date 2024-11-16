@@ -91,8 +91,8 @@ spec:
   rules:
   - http:
       paths:
-      - path: /rest(/|$)(.*) # The rest path is remapped in the c# app to /, but we need to capture the path after grpc
-        pathType: Prefix
+      - path: /rest/echoService(/|$)(.*) # The rest path is remapped in the c# app to /, but we need to capture the path after grpc
+        pathType: ImplementationSpecific
         backend:
           service:
             name: rest-echo-service

@@ -16,6 +16,10 @@ spec:
         app: echo-service-app
       {{- include "k8s-grpc-rest-echo.selectorLabels" . | nindent 8 }}
     spec:
+      volumes:
+        - name: echo-config-volume
+          configMap:
+            name: echo-configmap
       containers:
       - env:
         - name: POD_NAME
@@ -37,7 +41,10 @@ spec:
         - name: KUBERNETES_CLUSTER_DOMAIN
           value: {{ quote .Values.kubernetesClusterDomain }}
         image: {{ .Values.echoService.echoService.image.repository }}:{{ .Values.echoService.echoService.image.tag | default .Chart.AppVersion }}
-        imagePullPolicy: {{ .Values.echoService.echoService.imagePullPolicy }}
+        imagePullPolicy: {{ .Values.echoService.echoService.image.imagePullPolicy }}
+        volumeMounts:
+        - name: echo-config-volume
+          mountPath: /app/config
         livenessProbe:
           failureThreshold: 3
           httpGet:

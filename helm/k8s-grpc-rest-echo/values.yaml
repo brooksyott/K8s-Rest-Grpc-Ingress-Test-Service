@@ -2,8 +2,8 @@ echoService:
   echoService:
     image:
       repository: ghcr.io/brooksyott/k8s-rest-grpc-echoserver
-      tag: latest
-    imagePullPolicy: IfNotPresent
+      tag: v1.4.0
+      imagePullPolicy: IfNotPresent
     resources:
       limits:
         cpu: 500m
@@ -17,6 +17,7 @@ restEchoService:
     protocol: TCP
     targetPort: 8000
   type: ClusterIP
+  pathPrefix: /rest/echoService
 grpcEchoService:
   ports:
   - name: grpc
@@ -24,4 +25,9 @@ grpcEchoService:
     protocol: TCP
     targetPort: 50051
   type: ClusterIP
-
+  pathPrefix: /grpc/echoService
+configMap:
+  enabled: true # Ensure that the ConfigMap is enabled in the chart
+  data:
+    key1: "valuesFile1" # Override the data in the ConfigMap
+    key2: "valuesFile2"
