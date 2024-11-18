@@ -5,9 +5,9 @@ metadata:
   labels:
   {{- include "k8s-grpc-rest-echo.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.restEchoService.type }}
+  type: {{ .Values.ingress.grpc.type }}
   selector:
     app: echo-service-app
   {{- include "k8s-grpc-rest-echo.selectorLabels" . | nindent 4 }}
   ports:
-	{{- .Values.grpcEchoService.ports | toYaml | nindent 2 }}
+	{{- .Values.ingress.grpc.ports | toYaml | nindent 2 }}

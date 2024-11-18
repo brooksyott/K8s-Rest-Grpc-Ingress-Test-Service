@@ -10,22 +10,32 @@ echoService:
         memory: 128Mi
   replicas: 1
 kubernetesClusterDomain: cluster.local
-restEchoService:
-  ports:
-  - name: http
-    port: 443
-    protocol: TCP
-    targetPort: 8000
-  type: ClusterIP
-  pathPrefix: /rest/echoService
-grpcEchoService:
-  ports:
-  - name: grpc
-    port: 443
-    protocol: TCP
-    targetPort: 50051
-  type: ClusterIP
-  pathPrefix: /grpc/echoService
+ingress:
+  host:   # leave blank or add the domain name
+  ingressClassName: nginx
+  rest:
+    annotations:
+      nginx.ingress.kubernetes.io/use-regex: "true"
+      nginx.ingress.kubernetes.io/rewrite-target: $1
+    ports:
+    - name: http
+      port: 443
+      protocol: TCP
+      targetPort: 8000
+    type: ClusterIP
+    pathPrefix: /rest/echoService
+  grpc:
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+      nginx.ingress.kubernetes.io/rewrite-target: $1
+    ports:
+    - name: grpc
+      port: 443
+      protocol: TCP
+      targetPort: 50051
+    type: ClusterIP
+    pathPrefix: /grpc/echoService
 configMap:
   enabled: true # Ensure that the ConfigMap is enabled in the chart
   data:
